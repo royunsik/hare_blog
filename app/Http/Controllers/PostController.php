@@ -35,7 +35,7 @@ class PostController extends Controller
         $post->user_id = $request->user()->id;
 
         $file = $request->file('image');
-        $post->image = date('YmdHis') . '_' . $file->getClientOriginalName();
+        $post->image = self::createFileName($file);
 
         // トランザクション開始
         DB::beginTransaction();
@@ -101,7 +101,7 @@ class PostController extends Controller
         $file = $request->file('image');
         if($file){
             $delete_file_path = 'images/posts/' . $post->image;
-            $post->image = date('YmdHis') . '_' . $file->getClientOriginalName();
+            $post->image = self::createFileName($file);
         }
         $post->fill($request->all());
 
@@ -110,7 +110,6 @@ class PostController extends Controller
         try {
             // 登録
             $post->save();
-
             
         if($file){
             // 画像アップロード
@@ -146,5 +145,10 @@ class PostController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    private static function createFileName($file)
+    { 
+        return date('YmdHis') . '_' . $file->getClientOriginalName();
     }
 } 
