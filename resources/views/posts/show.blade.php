@@ -1,22 +1,9 @@
 <x-app-layout>
     <div class="container lg:w-3/4 md:w-4/5 w-11/12 mx-auto my-8 px-8 py-4 bg-white shadow-md">
-        
-        <x-flash-message :message="session('notice')" />
-        <x-validation-errors :errors="$errors"/>
 
-        @if ($errors->any())
-            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 my-2" role="alert">
-                <p>
-                    <b>{{ count($errors) }}件のエラーがあります。</b>
-                </p>
-                <ul>
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-        
+        <x-flash-message :message="session('notice')" />
+        <x-validation-errors :errors="$errors" />
+
         <article class="mb-2">
             <h2 class="font-bold font-sans break-normal text-gray-900 pt-6 pb-1 text-3xl md:text-4xl break-words">
                 {{ $post->title }}</h2>
@@ -47,8 +34,20 @@
             <hr class="my-4">
 
             <div class="flex justify-end">
-                <a href="{{ route('posts.comments.create', $post) }}" class="bg-indigo-400 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline block">コメント登録</a>
+                <a href="{{ route('posts.comments.create', $post) }}"
+                    class="bg-indigo-400 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline block">コメント登録</a>
             </div>
         @endauth
+
+        <section class="font-sans break-normal text-gray-900 ">
+            @foreach ($comments as $comment)
+                <div class="my-2">
+                    <span class="font-bold mr-3">{{ $comment->user->name }}</span>
+                    <span class="text-sm">{{ $comment->created_at }}</span>
+                    <p class="break-all">{!! nl2br(e($comment->body)) !!}</p>
+                </div>
+                <hr>
+            @endforeach
+        </section>
     </div>
 </x-app-layout>
